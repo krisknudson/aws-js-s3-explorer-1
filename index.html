@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html ng-app="s3explorer">
+
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width">
+    <meta http-equiv="pragma" content="no-cache" />
+    <meta http-equiv="Cache-Control" content="no-store" />
+
+    <title>AWS JS S3 Explorer</title>
+
+    <link rel="stylesheet" href="assets/js/libs/bootstrap/bootstrap-3.3.5-dist/css/bootstrap.min.css">
+    <link rel='stylesheet' href='assets/js/libs/angular/loading-bar.min.css' type='text/css' media='all'/>
+    <link rel="stylesheet" href="assets/css/style.css">
+    <script src="assets/js/libs/jquery/jquery.min.js"></script>
+    <script src="assets/js/libs/bootstrap/bootstrap-3.3.5-dist/js/bootstrap.min.js"></script>
+</head>
+
+<body ng-controller="MainController" ng-init="init()">
+
+<div class="top-menu-bar">
+    <div class="btn-group pull-left" style="margin-right: 10px;">
+        <span class="btn-group" uib-dropdown dropdown-append-to-body>
+            <button id="btn-append-to-body" type="button" class="btn btn-default" uib-dropdown-toggle>
+                <i class="glyphicon glyphicon-plus"></i>
+            </button>
+            <ul uib-dropdown-menu role="menu" aria-labelledby="btn-append-to-body">
+                <li role="menuitem"><a ng-click="openUploadDialog()">Add files...</a></li>
+                <li role="menuitem"><a ng-click="openCreateFolderDialog()">Add folders...</a></li>
+            </ul>
+            <button type="button" class="btn btn-default"><i ng-click="retrieveObjects(currentFolder, false)" class="glyphicon glyphicon-refresh" ></i></button>
+        </span>
+
+        <span id="select-btn" class="btn-group" uib-dropdown dropdown-append-to-body>
+            <button class="btn btn-default" class="btn btn-default btn-sm" ng-model="showCheckBox"
+                    ng-init="showCheckBox = false" ng-click="showCheckBox = !showCheckBox">Select</button>
+            <button class="btn btn-default" uib-dropdown-toggle><i class="glyphicon glyphicon-menu-down"></i></button>
+
+            <ul uib-dropdown-menu role="menu" aria-labelledby="select-btn" class="bottom-btn-bar-menu">
+                <li role="menuitem" ng-click="setObjectsIsSelected(true)"><a href="#">Select all</a></li>
+                <li role="menuitem" ng-click="setObjectsIsSelected(false)"><a href="#">Select none</a></li>
+            </ul>
+        </span>
+
+        <span class="btn-group" uib-dropdown dropdown-append-to-body ng-hide="isJunkDir()">
+            <button ng-disabled="numberOfSelected==0" id="action-btn" type="button" class="btn btn-default" uib-dropdown-toggle="action-dropdown-menu">
+                Action <i class="glyphicon glyphicon-menu-down"></i>
+            </button>
+            <ul uib-dropdown-menu role="menu" aria-labelledby="action-btn" class="bottom-btn-bar-menu">
+                <li role="menuitem" ng-controller="CopyController" ng-click="copy()"><a href="#">Copy...</a></li>
+                <li role="menuitem" ng-controller="CopyController" ng-click="copy('Move')"><a href="#">Move...</a></li>
+                <li ng-controller="DeleteController" role="menuitem" ng-click="showConfirm('sm', obj)" ><a href="#">Delete</a></li>
+            </ul>
+        </span>
+
+        <span uib-dropdown dropdown-append-to-body ng-show="isJunkDir()">
+            <button ng-disabled="numberOfSelected==0" id="junk-action-btn" type="button" class="btn btn-default btn-sm" uib-dropdown-toggle="action-dropdown-menu">
+                Action <i class="glyphicon glyphicon-menu-down"></i>
+             <ul uib-dropdown-menu role="menu" aria-labelledby="action-btn" class="bottom-btn-bar-menu">
+                 <li role="menuitem"><a ng-click="$emit('JunkRestore', files.concat(folders))">Restore</a></li>
+                 <li role="menuitem"><a ng-click="$emit('JunkDelete', files.concat(folders))">Delete</a></li>
+             </ul>
+        </span>
+
+    </div>
+
+    <div>
+        <ol class="breadcrumb">
+            <li ng-repeat="item in breadcrumbs" ng-class="{'extra-breadcrumbs':($middle && breadcrumbs.length > 4)}"><a style="cursor:pointer" ng-class="{'active':$last}" ng-click="goTo(item.prefix, $index)">{{item.displayName}}</a></li>
+        </ol>
+    </div>
+</div>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-xs-8 col-md-8" style="border-style: outset;">Name</div>
+        <div class="col-xs-2 col-md-2" style="border-style: outset;">Type</div>
+        <div class="col-xs-2 col-md-2" style="border-style: outset;">Size</div>
+    </div>
+    <div class="row up-one-level item folder" ng-show="parentFolder">
+        <div class="col-xs-8 col-md-8">
+            <span>
+                <i class="glyphicon glyphicon-folder-open padding-both"></i>
+                <i ng-click="goTo(parentFolder.prefix, breadcrumbs.length-2)">{{parentFolder.displayName}}</i>
+            </span>
+        </div>
+    </div>
+    <div class="row folder item" ng-repeat="folder in folders"
+         ng-include="'assets/html/child.folder.renderer.html'"
+         ng-class="{'row-hover' : folder.hover}"
+         ng-init="folder.hover = false" ng-mouseenter="folder.hover = true" ng-mouseleave="folder.hover = false">
+    </div>
+    <div infinite-scroll='loadMore()' infinite-scroll-distance='2'>
+        <div class="row file item" ng-repeat="file in files | limitTo:totalDisplayed track by file.key"
+             ng-include="'assets/html/file.renderer.html'" ng-class="{'row-hover' : file.hover}"
+             ng-init="file.hover = false"
+             ng-mouseenter="file.hover = true" ng-mouseleave="file.hover = false"></div>
+    </div>
+</div>
+
+<script type="application/javascript" src="assets/js/libs/aws/aws-sdk-2.3.12.js"></script>
+<script type="application/javascript" src="assets/js/libs/jszip/jszip.min.js"></script>
+<script type="application/javascript" src="assets/js/libs/angular/angular.min.js"></script>
+<script type="application/javascript" src="assets/js/libs/angular/angular-route.min.js"></script>
+<script type="application/javascript" src="assets/js/libs/angular/angular-animate.min.js"></script>
+<script type="application/javascript" src="assets/js/libs/angular/angular-mocks.js"></script>
+<script type="application/javascript" src="assets/js/libs/bootstrap/ui/ui-bootstrap-tpls-1.3.0.js"></script>
+<script type="application/javascript" src='assets/js/libs/angular/loading-bar.min.js'></script>
+<script type="application/javascript" src='assets/js/libs/angular/ng-infinite-scroll.min.js'></script>
+<script type="application/javascript" src="assets/js/app.js"></script>
+<script type="application/javascript" src="assets/js/directives/tree.directive.js"></script>
+<script type="application/javascript" src="assets/js/services/aws.service.js"></script>
+<script type="application/javascript" src="assets/js/services/util.service.js"></script>
+<script type="application/javascript" src="assets/js/controllers/main.js"></script>
+<script type="application/javascript" src="assets/js/controllers/upload.js"></script>
+<script type="application/javascript" src="assets/js/controllers/createFolder.js"></script>
+<script type="application/javascript" src="assets/js/controllers/rename.js"></script>
+<script type="application/javascript" src="assets/js/controllers/delete.js"></script>
+<script type="application/javascript" src="assets/js/controllers/copy.js"></script>
+<script type="application/javascript" src="assets/js/controllers/junk.js"></script>
+
+</body>
+
+</html>
