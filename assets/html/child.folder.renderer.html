@@ -1,0 +1,20 @@
+<div class="col-xs-8 col-md-8" id="{{'folder'+folders.indexOf(folder)}}">
+    <input class="item-checkbox" type="checkbox" ng-model="folder.isSelected" ng-change="selectAnObject(folder)"
+           ng-checked="folder.isSelected" ng-show="showCheckBox || folder.isSelected"/>
+    <span>
+        <i class="glyphicon glyphicon-folder-open padding-both" uib-popover-template="'assets/html/folder.detail.popover.html'"
+           popover-placement="bottom-left" popover-title="{{folder.displayName}}" popover-is-open="folder.popoverIsOpen"
+           popover-trigger="outsideClick"></i>
+        <i ng-click="retrieveObjects(folder.prefix, false)">{{folder.displayName}}</i>
+    </span>
+    <span uib-dropdown ng-init="item=folder" ng-show="folder.hover">
+        <i class="glyphicon glyphicon-collapse-down" uib-dropdown-toggle></i>
+        <ul uib-dropdown-menu role="menu" ng-include="'assets/html/dropdown.menu.html'" ng-if="!isJunkDir(item.prefix)"></ul>
+        <ul uib-dropdown-menu role="menu" ng-include="'assets/html/junk.menu.html'" ng-if="isJunkDir(item.prefix)"></ul>
+    </span>
+    <span ng-show="folder.status == 'downloading'">
+        Zipped: {{folder.zippedNumber}} | Current: {{folder.zipProgress}}
+    </span>
+</div>
+<div class="col-xs-2 col-md-2">Folder</div>
+<div class="col-xs-2 col-md-2"></div>

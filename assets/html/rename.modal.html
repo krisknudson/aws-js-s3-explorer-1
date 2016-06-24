@@ -1,0 +1,36 @@
+<div ng-controller="RenameController">
+    <div class="modal-content" id="renameModal">
+        <div class="modal-header">
+            <h4 id="myModalLabel">Rename {{itemType}}</h4>
+            <uib-alert type="danger" ng-show="errMsg">{{errMsg}}</uib-alert>
+        </div>
+        <div class="modal-body">
+            <form role="form">
+                <div class="form-group">
+                    <label for="originalName"><span></span>Original name:</label>
+                    <input readonly type="text" class="form-control" id="originalName" ng-model="$parent.originalName">
+                </div>
+                <div class="form-group">
+                    <label for="newName"><span></span>New name:</label>
+                    <input onblur="this.focus()" autofocus type="text" class="form-control" id="newName" ng-model="$parent.newName">
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-default" type="button" ng-click="rename()">Rename</button>
+            <button class="btn btn-default" type="button" ng-click="cancel()">Cancel</button>
+        </div>
+    </div>
+</div>
+<script>
+$(document).ready(function() {
+    $("#newName").focus(function() {
+        var end = $(this).val().lastIndexOf(".");
+        if(end == -1) {
+            end = $(this).val().length;
+        }
+        this.setSelectionRange(0,end);
+    });
+});
+</script>
+

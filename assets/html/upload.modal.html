@@ -1,0 +1,29 @@
+<div class="modal-header">
+    <h3 class="modal-title">Upload</h3>
+    <h4>{{ currentFolder }}</h4>
+    <uib-alert type="danger" ng-show="errMsg">{{errMsg}}</uib-alert>
+</div>
+<div class="modal-body">
+    <ul>
+        <li ng-repeat="uploadFile in ctrl.uploadFiles">
+            {{ uploadFile.name }}
+            <span ng-class="{'glyphicon-refresh glyphicon-spinning':(uploadFile.status == 'uploading'),
+                            'glyphicon-ok':(uploadFile.status == 'success'),
+                            'glyphicon-remove':(uploadFile.status == 'fail'),
+                            'glyphicon':true}"></span>
+            <span ng-show="(uploadFile.status == 'uploading')">{{uploadFile.progress}}</span>
+            <span ng-class="{'glyphicon glyphicon-remove':(uploadFile.status == 'ready')}" ng-click="ctrl.cancel($index)"></span>
+        </li>
+    </ul>
+</div>
+<div class="modal-footer">
+    <div class="btn btn-primary" style="position: relative; overflow: hidden; direction: ltr; float : left">
+        Browse
+        <input type="file" name="file" multiple accept=""  onchange="angular.element(this).scope().getFileDetails(this)"
+               style="position: absolute; right: 0px; top: 0px; font-family: Arial; font-size: 118px;
+                    margin: 0px; padding: 0px; cursor: pointer; opacity: 0;">
+    </div>
+    <button class="btn btn-primary" type="button" ng-click="ctrl.upload()" ng-hide="ctrl.failedFiles.length">Upload</button>
+    <button class="btn btn-primary" type="button" ng-click="ctrl.retry()" ng-show="ctrl.failedFiles.length">Retry</button>
+    <button class="btn btn-warning" type="button" ng-click="ctrl.close()">Close</button>
+</div>

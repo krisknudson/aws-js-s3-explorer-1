@@ -1,0 +1,28 @@
+<div >
+    <div class="modal-header">
+        <h4 id="myModalLabel">{{ctrl.buttonLabel}}</h4>
+        <h5 > {{message}}</h5  >
+        <uib-alert id="err" type="danger" ng-show="errMsg">{{errMsg}}</uib-alert>
+    </div>
+
+
+    <div class="modal-body">
+        <ff-tree tree-data="folderTree"
+                 node-id="folderId"
+                 node-name="folderName"
+                 node-state="collapse"
+                 ng-click="onSelect()"
+                 collapse-nodes="collapseNodes"
+                 ng-disabled="clicked"
+                 >
+        </ff-tree>
+    </div>
+    <div class="modal-footer">
+        <span class="glyphicon glyphicon-refresh glyphicon-spinning" ng-if="ctrl.processing"></span>
+        <button id="copy" class="btn btn-primary" type="button" ng-click="copy()">{{ctrl.buttonLabel}}</button>
+        <button id="cancel" class="btn btn-warning" type="button" ng-click="cancel()">Close</button>
+    </div>
+
+
+</div>
+

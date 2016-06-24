@@ -1,0 +1,136 @@
+body {
+    padding: 38px 0px 10px 0px;
+}
+ul {
+    padding-left: 0px;
+}
+li {
+    list-style-type: none;
+}
+
+.glyphicon-chevron-left,
+.glyphicon-chevron-right,
+.glyphicon-chevron-up,
+.glyphicon-chevron-down{
+    color: #aaa;
+}
+
+.glyphicon-folder-open,
+.glyphicon-file,
+.glyphicon-collapse-down,
+.glyphicon-plus,
+.glyphicon-menu-down,
+.glyphicon-refresh{
+    color: #29d;
+}
+
+.padding-both {
+    padding : 5px;
+}
+
+.file {
+    cursor: pointer;
+    background-color: #eeeeee;
+}
+
+.folder {
+    background-color: rgba(66, 139, 202, 0.24);
+    cursor: pointer;
+}
+
+.folder:hover {
+    text-decoration: underline;
+}
+.item:hover {
+    cursor: pointer;
+    background-color: #d3d4ee;
+}
+
+.active {
+    font-style: italic;
+}
+
+.breadcrumb {
+    border-color: grey;
+    margin-bottom: 0px;
+}
+
+.btn {
+    font-size: 15px;
+}
+
+.glyphicon-spinning {
+    -animation: spin .7s infinite linear;
+    -webkit-animation: spin2 .7s infinite linear;
+}
+
+@-webkit-keyframes spin2 {
+    from { -webkit-transform: rotate(0deg);}
+    to { -webkit-transform: rotate(360deg);}
+}
+
+@keyframes spin {
+    from { transform: scale(1) rotate(0deg);}
+    to { transform: scale(1) rotate(360deg);}
+}
+.top-menu-bar {
+    z-index: 9999;
+    position: fixed;
+    top: 0;
+    left: 0;
+    border-bottom: 2px solid #C8C8C8;
+    width: 100%;
+    background: #F5F5F5;
+}
+
+.top-menu-bar div {
+    display: inline;
+}
+
+.folder .item-checkbox, .file .item-checkbox {
+    margin: 0px;
+}
+.popover {
+    max-width: none;
+    min-width: 340px;
+}
+
+.file-details {
+    font-size : 12px;
+}
+
+.file-details .file-title {
+
+}
+
+.file-details .file-details-link {
+    background-color: #EBEBEB;
+    color: #000;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    width: 100%;
+}
+
+.file-details .file-details-link a {
+    text-decoration: underline;
+}
+
+.file-details .file-details-button {
+    margin-top: 10px;
+}
+
+.extra-breadcrumbs > * {
+    display: none;
+}
+
+.extra-breadcrumbs:after {
+    content: '...'
+}
+
+.extra-breadcrumbs:hover > * {
+    display: initial;
+}
+
+.extra-breadcrumbs:hover:after {
+    display: none;
+}

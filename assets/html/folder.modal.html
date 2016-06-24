@@ -1,0 +1,16 @@
+<div class="modal-header">
+    <h3 class="modal-title">Create new foler</h3>
+    <uib-alert type="danger" ng-show="errMsg">{{errMsg}}</uib-alert>
+</div>
+<div class="modal-body">
+    <div class="input-group">
+        <label>New folder:</label>
+        <input type="text" ng-model="folderName" class="form-control"/>
+
+    </div>
+</div>
+<div class="modal-footer">
+    <span class="glyphicon glyphicon-refresh glyphicon-spinning" ng-if="ctrl.processing"></span>
+    <button class="btn btn-primary" type="button" ng-click="ctrl.create()">Create</button>
+    <button class="btn btn-warning" type="button" ng-click="ctrl.cancel()">Cancel</button>
+</div>

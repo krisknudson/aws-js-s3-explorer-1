@@ -1,0 +1,13 @@
+<li role="menuitem" ng-controller="RenameController">
+    <a href="#" ng-click="open()" ng-show="isFile()">Rename...</a>
+</li>
+<li role="menuitem" ng-controller="CopyController">
+    <a href="#" ng-click="copy()">Copy...</a>
+</li>
+<li role="menuitem" ng-controller="CopyController">
+    <a href="#" ng-click="copy('Move')">Move...</a>
+</li>
+<li role="menuitem" ng-controller="DeleteController"
+    ng-click="showConfirm('sm', item)">
+    <a href="#">Delete</a>
+</li>

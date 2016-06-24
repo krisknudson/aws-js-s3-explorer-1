@@ -1,0 +1,20 @@
+<div class="col-xs-8 col-md-8" id="{{'file'+files.indexOf(file)}}">
+    <input class="item-checkbox" type="checkbox" ng-checked="file.isSelected" ng-model="file.isSelected"
+           ng-show="showCheckBox || file.isSelected" ng-change="selectAnObject(file)"/>
+    <span>
+        <i class="glyphicon glyphicon-file padding-both"></i>
+        <i uib-popover-template="'assets/html/file.detail.popover.html'" popover-placement="bottom-left"
+           popover-title="{{file.displayName}}" popover-is-open="file.popoverIsOpen" popover-trigger="outsideClick">
+            {{file.displayName}}
+        </i>
+    </span>
+    <span uib-dropdown ng-init="item=file" ng-show="file.hover" is-open="file.menuIsOpen">
+        <i class="glyphicon glyphicon-collapse-down" uib-dropdown-toggle></i>
+        <ul uib-dropdown-menu role="menu" ng-include="'assets/html/dropdown.menu.html'"
+            ng-mouseleave="file.menuIsOpen = false" ng-if="!isJunkDir()"></ul>
+        <ul uib-dropdown-menu role="menu" ng-include="'assets/html/junk.menu.html'" ng-if="isJunkDir()"></ul>
+    </span>
+    <span ng-show="file.status == 'downloading'">Zipped: {{file.zipProgress}}</span>
+</div>
+<div class="col-xs-2 col-md-2">{{file.type}}</div>
+<div class="col-xs-2 col-md-2">{{file.size}}</div>

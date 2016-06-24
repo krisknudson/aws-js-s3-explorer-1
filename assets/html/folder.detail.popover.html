@@ -1,0 +1,22 @@
+<span class="glyphicon glyphicon-remove-circle" style="position: absolute; top:5px;right:5px;" ng-click="closeDetailsPopover(folder)"></span>
+<div class="file-details" ng-init="showDetails = false">
+    <div class="file-details-link" ng-click="showDetails = !showDetails">
+        <span ng-class="{'glyphicon glyphicon-triangle-bottom' : showDetails ,'glyphicon glyphicon-triangle-right' : !showDetails}"></span>
+        <a href="#">Details</a>
+    </div>
+    <div ng-show="showDetails">
+        <div class="s3-path">
+            Path : {{folder.prefix}}
+        </div>
+    </div>
+    <div class="file-details-button">
+        <button type="button" class="btn btn-default btn-xs" ng-click="downloadFolder(folder)">Download zipped</button>
+        <div class="btn-group pull-right" uib-dropdown >
+            <button type="button" class="btn btn-default btn-xs" uib-dropdown-toggle>
+                Actions
+            </button>
+            <ul uib-dropdown-menu role="menu" ng-include="'assets/html/dropdown.menu.html'" ng-if="!isJunkDir(folder.prefix)"></ul>
+            <ul uib-dropdown-menu role="menu" ng-include="'assets/html/junk.menu.html'" ng-if="isJunkDir(folder.prefix)"></ul>
+        </div>
+    </div>
+</div>

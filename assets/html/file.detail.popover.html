@@ -1,0 +1,38 @@
+<span class="glyphicon glyphicon-remove-circle" style="position: absolute; top:5px;right:5px;" ng-click="closeDetailsPopover(file)"></span>
+<div class="file-details" ng-init="showDetails = false">
+    <div class="file-details-link" ng-click="showDetails = !showDetails">
+        <span ng-class="{'glyphicon glyphicon-triangle-bottom' : showDetails ,'glyphicon glyphicon-triangle-right' : !showDetails}"></span>
+        <a href="#">Details</a>
+    </div>
+    <div ng-show="showDetails">
+        <div class="s3-path">
+            Path : {{file.key}}
+        </div>
+        <div class="content-size">
+            Size : {{file.size}}
+        </div>
+        <div class="modified-time" ng-show="showDetails">
+            Last modified : {{file.lastModified | date:"MM/dd/yyyy ' ' h:mma"}}
+        </div>
+    </div>
+    <div class="file-details-button">
+        <span class="btn-group" uib-dropdown>
+            <button ng-disabled="file.status === 'downloading'" type="button" class="btn btn-default btn-xs"
+                    ng-click="downloadFile(file, false)">Download</button>
+            <button class="btn btn-default btn-xs" uib-dropdown-toggle><i class="glyphicon glyphicon-menu-down"></i></button>
+            <ul uib-dropdown-menu role="menu" aria-labelledby="select-btn" class="bottom-btn-bar-menu">
+                <li role="menuitem" ng-click="downloadFile(file, false)"><a href="#">Download</a></li>
+                <li role="menuitem" ng-click="downloadFile(file, true)" ng-disabled="file.status === 'downloading'">
+                    <a href="#">Download zipped</a>
+                </li>
+            </ul>
+        </span>
+        <div class="btn-group pull-right" uib-dropdown >
+            <button type="button" class="btn btn-default btn-xs" uib-dropdown-toggle>
+                Actions
+            </button>
+            <ul uib-dropdown-menu role="menu" ng-include="'assets/html/dropdown.menu.html'" ng-if="!isJunkDir(file.key)"></ul>
+            <ul uib-dropdown-menu role="menu" ng-include="'assets/html/junk.menu.html'" ng-if="isJunkDir(file.key)"></ul>
+        </div>
+    </div>
+</div>
